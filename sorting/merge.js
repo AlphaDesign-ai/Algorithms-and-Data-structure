@@ -41,8 +41,6 @@ function mergeSort(
   );
 }
 
-// console.log(mergeSort([2, 3, 6, 8, 9], [1, 4, 5, 7, 10]));
-
 function mergeSorting(
   unSortedList,
   middleIndex = Math.trunc(unSortedList.length / 2)
