@@ -35,19 +35,18 @@ class HeapSort {
   }
 
   adjustNode(currentNodePosition, heapListSize) {
-    //initial value for the compute is set to `undefined` by default
     let compareNode;
     //`compare value` is being compute
     compareNode = this.getCompareNode(currentNodePosition, heapListSize);
-    //verify if `currentNodePosition` has aby descendant
+    //has descendant
     if (compareNode && compareNode.length) {
       //get `compareNode`
       compareNode = this.getHeapCompareNode(compareNode);
       //compare the `compare node` with it `parentNode`
       if (this.compareNode(currentNodePosition - 1, compareNode - 1)) {
-        //perform a swap operation between the two nodes
+        //perform a swap
         this.swapNode(currentNodePosition - 1, compareNode - 1);
-        //repeat the operation for `nth` number of time
+        //recur call
         this.adjustNode(compareNode, heapListSize);
       }
     }
@@ -67,8 +66,7 @@ class HeapSort {
   }
 
   getCompareNode(currentNodePosition, currentHeapSize) {
-    //compute the value of the left child
-    let leftNode = currentNodePosition * 2;
+    let leftNode = currentNodePosition * 2; //left child
     //verify if the `currentNode` & `leftChildNode` is les than `currentHeapSize`
     return currentNodePosition <= currentHeapSize
       ? [leftNode, leftNode + 1].filter(
@@ -86,33 +84,33 @@ class HeapSort {
   }
 
   heapTree(currentNodePosition = 0, countHeapNode = this.heapListSize) {
-    //declaration of parentNode alongside childNode
+    //tree done
+    if (!countHeapNode) {
+      return this.heapList;
+    }
     let parentNode,
       swapNode = currentNodePosition;
-    //check if count hasn't deduce to 0
-    if (countHeapNode) {
-      //check if the node ancestors isn't 0 and compare
-      while (
-        (parentNode = this.getNodeParent(swapNode + 1)) &&
-        this.compareNode(parentNode - 1, swapNode)
-      ) {
-        //perform a swap of node
-        this.swapNode(parentNode - 1, swapNode);
-        //current swap node
-        swapNode = parentNode - 1;
-      }
-      //call for `nth` time depending on the nodeList size
-      this.heapTree(currentNodePosition + 1, --countHeapNode);
+    //does ancestor exist
+    while (
+      (parentNode = this.getNodeParent(swapNode + 1)) &&
+      this.compareNode(parentNode - 1, swapNode)
+    ) {
+      //perform a swap of node
+      this.swapNode(parentNode - 1, swapNode);
+      //current swap node
+      swapNode = parentNode - 1;
     }
+    //recur self call
+    return this.heapTree(currentNodePosition + 1, --countHeapNode);
   }
 
   sortHeap(countHeapNode = this.heapListSize) {
     if (!countHeapNode) return this.heapList;
-    //remove the root and arrange base on the `heapType`
+    //shift and arrange base on the `heapType`
     this.swapNode(0, countHeapNode - 1, this.heapTreeType);
-    //check if the tree still abide to the heap tree
+    //check if the tree still abide to the heap tree rule
     this.adjustNode(1, --countHeapNode);
-    //repeat the operation for `nth` number of time
+    //repeat the operation
     return this.sortHeap(countHeapNode);
   }
 }
