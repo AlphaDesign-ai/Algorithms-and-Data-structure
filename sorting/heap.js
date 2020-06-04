@@ -10,13 +10,11 @@ class HeapSort {
   compareNode(firstNodePosition, secondNodePosition) {
     //base on the type perform this set of operation
     return this.heapTreeType
-      ? this.heapList[firstNodePosition] > this.heapList[secondNodePosition] ||
-          false
-      : this.heapList[firstNodePosition] < this.heapList[secondNodePosition] ||
-          false;
+      ? this.heapList[firstNodePosition] > this.heapList[secondNodePosition]
+      : this.heapList[firstNodePosition] < this.heapList[secondNodePosition];
   }
 
-  swapNode(firstNodePosition, secondNodePosition, heapSwaptype) {
+  swapNode(firstNodePosition, secondNodePosition, heapSwapType) {
     //swap node position
     this.heapList.splice(
       firstNodePosition,
@@ -28,7 +26,7 @@ class HeapSort {
       )
     );
     // mainly specific for `min` heap
-    if (heapSwaptype) {
+    if (heapSwapType) {
       [this.heapList[this.heapListSize - 1]] = this.heapList.splice(
         secondNodePosition,
         1
