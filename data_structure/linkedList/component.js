@@ -7,7 +7,6 @@ const handleError = (msg) => new Error(msg);
 export class Component {
   constructor(needTail) {
     this.head = null;
-
     if (needTail) {
       this.tail = null;
     }
