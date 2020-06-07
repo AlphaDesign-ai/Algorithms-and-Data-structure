@@ -243,6 +243,30 @@ export class Component {
     return this.length;
   }
 
+  reverse() {
+    let curNode, nextNode, prevNode;
+    curNode = this.head;
+    nextNode = prevNode = null;
+    if ('tail' in this) {
+      this.tail = curNode;
+    }
+    if ('prev' in curNode) {
+      prevNode = curNode.prev;
+    }
+    while (curNode) {
+      nextNode = curNode.next;
+      curNode.next = prevNode;
+      if ('prev' in curNode) {
+        curNode.prev = nextNode;
+      }
+      prevNode = curNode;
+      curNode = nextNode;
+
+      if (nextNode === this.head) break;
+    }
+    this.head = prevNode;
+  }
+
   display(callFn) {
     let tempNode = this.head ?? (this.tail ? this.tail.next : null);
     while (tempNode) {
