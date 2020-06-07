@@ -268,7 +268,7 @@ export class Component {
   }
 
   display(callFn) {
-    let tempNode = this.head ?? (this.tail ? this.tail.next : null);
+    let tempNode = this.head || (this.tail ? this.tail.next : null);
     while (tempNode) {
       if (callFn) {
         callFn(tempNode);

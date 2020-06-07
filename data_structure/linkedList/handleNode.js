@@ -19,14 +19,14 @@ export class Node {
     console.log(item.data);
   }
 }
-export default function (item, type) {
-  if (!Object[Symbol.hasInstance](item)) return;
+export default function (items, type) {
+  if (!Object[Symbol.hasInstance](items)) return;
 
   const chainedResult = { count: 1 };
 
   //define the start node
   Object.defineProperty(chainedResult, 'startNode', {
-    value: new Node(item.shift(), type),
+    value: new Node(items.shift(), type),
     configurable: true,
     enumerable: true,
     writable: false,
@@ -34,11 +34,11 @@ export default function (item, type) {
 
   //generate chained node
   return (function generateChainNode(prev) {
-    if (!item.length) {
+    if (!items.length) {
       chainedResult.endNode = prev;
       return chainedResult;
     }
-    const newNode = new Node(item.shift(), type);
+    const newNode = new Node(items.shift(), type);
     prev.next = newNode;
     if (type === 'doublyLinked') {
       newNode.prev = prev;
