@@ -87,7 +87,7 @@ export class Component {
   }
 
   append(item) {
-    if (item !== 0 && !item) {
+    if (Object.is(item + 1, NaN) && !item) {
       this.front !== this.rear;
       throw handleError('Enter a value to prepend');
     }
@@ -198,7 +198,7 @@ export class Component {
 
   insertAtPos(pos, item) {
     //position greater than list length
-    if (item !== 0 && !item) {
+    if (Object.is(item + 1, NaN) && !item) {
       throw handleError('Enter a value to insert');
     }
 
