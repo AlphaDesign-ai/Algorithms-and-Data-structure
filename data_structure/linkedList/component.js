@@ -2,22 +2,19 @@
 import createChainNode, { Node } from './handleNode.js';
 
 const INCREMENT_ONE = 1;
-
-function getNode(startNode, position) {
-  let tempNode = startNode;
-  if (!tempNode) return tempNode;
-  let increment = 1;
-  while (!Object.is(tempNode.next, null) && increment < position) {
-    tempNode = tempNode.next;
-    increment++;
-  }
-  return tempNode;
-}
-
 const handleError = (msg) => new Error(msg);
 
 export class Component {
-  getNode = getNode.bind(this);
+  getNode(position) {
+    let tempNode = this.head;
+    if (!tempNode) return tempNode;
+    let increment = 1;
+    while (!Object.is(tempNode.next, null) && increment < position) {
+      tempNode = tempNode.next;
+      increment++;
+    }
+    return tempNode;
+  }
 
   constructor(needTail) {
     this.head = null;
@@ -96,7 +93,7 @@ export class Component {
       throw handleError('Enter a value to prepend');
     }
 
-    const lastNode = this.tail || this.getNode(this.head, this.length);
+    const lastNode = this.tail || this.getNode(this.length);
     if (!(item instanceof Object)) {
       const newNode = new Node(item, this._TYPE);
 
@@ -185,8 +182,7 @@ export class Component {
       this.tail = this.head = null;
     } else {
       prevNode =
-        (this.tail ? this.tail.prev : null) ??
-        this.getNode(this.head, this.length - 1);
+        (this.tail ? this.tail.prev : null) || this.getNode(this.length - 1);
 
       if (prevNode === this.head && this.length === 1) {
         tempNode = this.head;
@@ -220,7 +216,7 @@ export class Component {
       return this[pos === INCREMENT_ONE ? 'prepend' : 'append'](item);
     }
 
-    const prevNode = this.getNode(this.head, pos - INCREMENT_ONE);
+    const prevNode = this.getNode(pos - INCREMENT_ONE);
     const nextNode = prevNode.next;
     if (item instanceof Object) {
       const chainedNode = createChainNode(item, this._TYPE);
@@ -292,7 +288,7 @@ export class Component {
     if (pos === 1 || pos === this.length) {
       return this[pos === 1 ? 'shift' : 'pop']();
     } else {
-      const prevNode = this.getNode(this.head, pos - 1);
+      const prevNode = this.getNode(pos - 1);
       const removeNode = prevNode.next;
       const nextNode = removeNode.next;
 
