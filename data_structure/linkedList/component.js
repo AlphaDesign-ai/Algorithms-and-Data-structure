@@ -5,17 +5,6 @@ const INCREMENT_ONE = 1;
 const handleError = (msg) => new Error(msg);
 
 export class Component {
-  getNode(position) {
-    let tempNode = this.head;
-    if (!tempNode) return tempNode;
-    let increment = 1;
-    while (!Object.is(tempNode.next, null) && increment < position) {
-      tempNode = tempNode.next;
-      increment++;
-    }
-    return tempNode;
-  }
-
   constructor(needTail) {
     this.head = null;
 
@@ -39,6 +28,17 @@ export class Component {
         },
       });
     }.call(this);
+  }
+
+  getNode(position) {
+    let tempNode = this.head;
+    if (!tempNode) return tempNode;
+    let increment = 1;
+    while (!Object.is(tempNode.next, null) && increment < position) {
+      tempNode = tempNode.next;
+      increment++;
+    }
+    return tempNode;
   }
 
   prepend(item) {
