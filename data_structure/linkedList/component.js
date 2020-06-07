@@ -96,7 +96,7 @@ export class Component {
       throw handleError('Enter a value to prepend');
     }
 
-    const lastNode = this.tail ?? this.getNode(this.head, this.length);
+    const lastNode = this.tail || this.getNode(this.head, this.length);
     if (!(item instanceof Object)) {
       const newNode = new Node(item, this._TYPE);
 
@@ -150,7 +150,7 @@ export class Component {
       throw new Error('List is empty.');
     }
 
-    let tempNode = this.head ?? this.tail;
+    let tempNode = this.head || this.tail;
     if (tempNode === this.head.next || !this.head.next) {
       tempNode = this.head;
       this.head = this.tail = null;
