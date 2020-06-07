@@ -145,14 +145,12 @@ export class Component {
     if (!this.head) {
       throw new Error('List is empty.');
     }
-
     let tempNode = this.head || this.tail;
     if (tempNode === this.head.next || !this.head.next) {
       tempNode = this.head;
       this.head = this.tail = null;
     } else {
       this.head = this.head.next;
-
       if (this.tail) {
         if (this.distinct) {
           this.head.prev = this.tail;
@@ -162,7 +160,6 @@ export class Component {
           this.tail.next = this.head;
         }
       }
-
       if (this.distinct) {
         this.tail.next = this.head;
       }
@@ -201,7 +198,6 @@ export class Component {
 
   insertAtPos(pos, item) {
     //position greater than list length
-
     if (item !== 0 && !item) {
       throw handleError('Enter a value to insert');
     }
@@ -209,12 +205,10 @@ export class Component {
     if (pos > this.length + INCREMENT_ONE) {
       throw handleError('invalid position.');
     }
-
     //perform append or prepend
     if (pos === INCREMENT_ONE || pos === this.length + INCREMENT_ONE) {
       return this[pos === INCREMENT_ONE ? 'prepend' : 'append'](item);
     }
-
     const prevNode = this.getNode(pos - INCREMENT_ONE);
     const nextNode = prevNode.next;
     if (item instanceof Object) {
@@ -270,11 +264,9 @@ export class Component {
       } else {
         console.log(tempNode.data);
       }
-
       if (tempNode === this.tail) {
         return;
       }
-
       tempNode = tempNode.next;
     }
   }
