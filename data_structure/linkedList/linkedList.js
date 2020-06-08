@@ -27,7 +27,7 @@ const SinglyLinkedList = (function () {
         );
       }
       if (!(item instanceof Object)) {
-        this.head = new Node(item, createSinglyNode);
+        this.head = new Node(item, this.createNode);
 
         if ('tail' in this) {
           this.tail = this.head;
@@ -38,7 +38,7 @@ const SinglyLinkedList = (function () {
           startNode: this.head,
           count: this.length,
           endNode: tail,
-        } = createChainNode(item, this._TYPE, createSinglyNode));
+        } = createChainNode(item, this._TYPE, this.createNode));
         if ('tail' in this) {
           this.tail = tail;
         }

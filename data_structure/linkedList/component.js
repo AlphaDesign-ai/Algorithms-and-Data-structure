@@ -13,7 +13,7 @@ export class Component {
     }
     let count = 0;
 
-    this.createNode = cb;
+    this.createNode = cb.bind(this);
     //define the virtual property
     !function () {
       Object.defineProperty(this, 'length', {

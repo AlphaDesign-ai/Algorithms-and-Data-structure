@@ -5,7 +5,7 @@ import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
 
-function createDoublyNode() {
+function this.createNode() {
   this.next = null;
   this.prev = null;
 }
@@ -23,14 +23,14 @@ class DoublyLinkedList extends Component {
 
   create(value) {
     if (!value instanceof Array) {
-      newNode = new Node(value, createDoublyNode);
+      newNode = new Node(value, this.createNode);
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
       const chainedNodeResult = createChainNode(
         value,
         this._TYPE,
-        createChainNode
+        this.createNode
       );
       this.length = chainedNodeResult.count;
       this.head = chainedNodeResult.startNode;
