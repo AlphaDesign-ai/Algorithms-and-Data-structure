@@ -5,7 +5,7 @@ import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
 
-function this.createNode() {
+function createDoublyNode() {
   this.next = null;
   this.prev = null;
 }
