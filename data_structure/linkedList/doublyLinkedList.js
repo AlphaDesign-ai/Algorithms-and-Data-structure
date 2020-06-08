@@ -12,7 +12,7 @@ function createDoublyNode() {
 
 class DoublyLinkedList extends Component {
   constructor(value) {
-    super();
+    super(true, createDoublyNode);
     this._TYPE = 'doublyLinked';
     this.tail = null;
 
