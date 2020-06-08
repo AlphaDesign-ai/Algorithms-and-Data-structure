@@ -23,14 +23,14 @@ class DoublyLinkedList extends Component {
 
   create(value) {
     if (!value instanceof Array) {
-      newNode = new Node(value, this.createNode);
+      newNode = new Node(value, this.setNodePointers);
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
       const chainedNodeResult = createChainNode(
         value,
         this._TYPE,
-        this.createNode
+        this.setNodePointers
       );
       this.length = chainedNodeResult.count;
       this.head = chainedNodeResult.startNode;

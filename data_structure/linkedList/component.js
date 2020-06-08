@@ -13,7 +13,7 @@ export class Component {
     }
     let count = 0;
 
-    this.createNode = cb;
+    this.setNodePointers = cb;
     //define the virtual property
     !function () {
       Object.defineProperty(this, 'length', {
@@ -49,7 +49,7 @@ export class Component {
     console.log(createNode);
 
     if (!(item instanceof Array)) {
-      const newNode = new Node(item, this.createNode);
+      const newNode = new Node(item, this.setNodePointers);
 
       if (this.head) {
         newNode.next = this.head;
@@ -61,7 +61,7 @@ export class Component {
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
-      const result = createChainNode(item, this._TYPE, this.createNode);
+      const result = createChainNode(item, this._TYPE, this.setNodePointers);
       const tempNode = this.head;
 
       this.head = result.startNode;
@@ -97,7 +97,7 @@ export class Component {
 
     const lastNode = this.tail || this.getNode(this.length);
     if (!(item instanceof Object)) {
-      const newNode = new Node(item, this.createNode);
+      const newNode = new Node(item, this.setNodePointers);
 
       if (!lastNode) {
         this.head = newNode;
@@ -119,7 +119,7 @@ export class Component {
     }
     //check is item is an object
     else if (Array.isArray(item) || item instanceof Object) {
-      const result = createChainNode(item, this._TYPE, this.createNode);
+      const result = createChainNode(item, this._TYPE, this.setNodePointers);
       if (!lastNode) {
         this.head = result.startNode;
 
@@ -215,14 +215,14 @@ export class Component {
     const prevNode = this.getNode(pos - INCREMENT_ONE);
     const nextNode = prevNode.next;
     if (item instanceof Object) {
-      const chainedNode = createChainNode(item, this._TYPE, this.createNode);
+      const chainedNode = createChainNode(item, this._TYPE, this.setNodePointers);
       //perform linking of chain node
       prevNode.next = chainedNode.startNode;
       nextNode.prev = chainedNode.endNode;
       this.length = chainedNode.count;
     } else {
       //item is single
-      prevNode.next = new Node(item, this.createNode);
+      prevNode.next = new Node(item, this.setNodePointers);
       prevNode.next.next = nextNode;
 
       this.length = INCREMENT_ONE;
