@@ -3,6 +3,6 @@
 export default class Node {
   constructor(data, cb) {
     this.data = data;
-    cb(this);
+    Function[Symbol.hasInstance](cb) ? cb(this) : null;
   }
 }
