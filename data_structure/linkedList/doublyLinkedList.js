@@ -5,14 +5,14 @@ import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
 
-function createDoublyNode() {
-  this.next = null;
-  this.prev = null;
-}
+const setDoublyNodePointers = (_this) => {
+  _this.next = null;
+  _this.prev = null;
+};
 
 class DoublyLinkedList extends Component {
   constructor(value) {
-    super(true, createDoublyNode);
+    super(true, setDoublyNodePointers);
     this._TYPE = 'doublyLinked';
     this.tail = null;
 

@@ -3,16 +3,16 @@ import { Component } from './component.js';
 import createChainNode from './handleNode.js';
 import Node from '../node/node.js';
 
-function createSinglyNode() {
-  this.next = null;
-}
+const setSinglyNodePointers = (_this) => {
+  _this.next = null;
+};
 
 const SinglyLinkedList = (function () {
   const handleError = (msg) => new Error(msg);
 
   class SinglyLinkedList extends Component {
     constructor(item, needTail) {
-      super(needTail, createSinglyNode);
+      super(needTail, setSinglyNodePointers);
       this._TYPE = 'singlyLinked';
 
       if (item) {
