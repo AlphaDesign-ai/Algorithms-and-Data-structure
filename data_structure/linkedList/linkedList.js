@@ -49,5 +49,3 @@ const SinglyLinkedList = (function () {
 
 export default SinglyLinkedList;
 
-// const link = new SinglyLinkedList({ item: [1, 2, 3, 4], needTail: true });
-// globalThis.link = link;
