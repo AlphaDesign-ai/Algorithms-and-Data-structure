@@ -1,17 +1,20 @@
 'use strict';
-import createChainNode, { Node } from './handleNode.js';
+import createChainNode from './handleNode.js';
+import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
 const handleError = (msg) => new Error(msg);
+let createNode = null;
 
 export class Component {
-  constructor(needTail) {
+  constructor(needTail, cb) {
     this.head = null;
     if (needTail) {
       this.tail = null;
     }
     let count = 0;
 
+    createNode = cb;
     //define the virtual property
     !function () {
       Object.defineProperty(this, 'length', {
@@ -44,9 +47,10 @@ export class Component {
     if (item !== 0 && !item) {
       throw handleError('Enter a value to append');
     }
+    console.log(createNode);
 
     if (!(item instanceof Array)) {
-      const newNode = new Node(item, this._TYPE);
+      const newNode = new Node(item, createNode);
 
       if (this.head) {
         newNode.next = this.head;
@@ -58,7 +62,7 @@ export class Component {
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
-      const result = createChainNode(item, this._TYPE);
+      const result = createChainNode(item, this._TYPE, createNode);
       const tempNode = this.head;
 
       this.head = result.startNode;
@@ -94,7 +98,7 @@ export class Component {
 
     const lastNode = this.tail || this.getNode(this.length);
     if (!(item instanceof Object)) {
-      const newNode = new Node(item, this._TYPE);
+      const newNode = new Node(item, createNode);
 
       if (!lastNode) {
         this.head = newNode;
@@ -116,7 +120,7 @@ export class Component {
     }
     //check is item is an object
     else if (Array.isArray(item) || item instanceof Object) {
-      const result = createChainNode(item, this._TYPE);
+      const result = createChainNode(item, this._TYPE, createNode);
       if (!lastNode) {
         this.head = result.startNode;
 
@@ -212,7 +216,7 @@ export class Component {
     const prevNode = this.getNode(pos - INCREMENT_ONE);
     const nextNode = prevNode.next;
     if (item instanceof Object) {
-      const chainedNode = createChainNode(item, this._TYPE);
+      const chainedNode = createChainNode(item, this._TYPE, createNode);
       //perform linking of chain node
       prevNode.next = chainedNode.startNode;
       nextNode.prev = chainedNode.endNode;

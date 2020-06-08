@@ -1,8 +1,14 @@
 'use strict';
 import { Component } from './component.js';
-import createChainNode, { Node } from './handleNode.js';
+import createChainNode from './handleNode.js';
+import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
+
+function createDoublyNode() {
+  this.next = null;
+  this.prev = null;
+}
 
 class DoublyLinkedList extends Component {
   constructor(value) {
@@ -17,11 +23,15 @@ class DoublyLinkedList extends Component {
 
   create(value) {
     if (!value instanceof Array) {
-      newNode = new Node(value, this._TYPE);
+      newNode = new Node(value, createDoublyNode);
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
-      const chainedNodeResult = createChainNode(value, this._TYPE);
+      const chainedNodeResult = createChainNode(
+        value,
+        this._TYPE,
+        createChainNode
+      );
       this.length = chainedNodeResult.count;
       this.head = chainedNodeResult.startNode;
       this.tail = chainedNodeResult.endNode;

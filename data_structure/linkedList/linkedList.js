@@ -1,13 +1,18 @@
 'use strict';
 import { Component } from './component.js';
-import createChainNode, { Node } from './handleNode.js';
+import createChainNode from './handleNode.js';
+import Node from '../node/node.js';
+
+function createSinglyNode() {
+  this.next = null;
+}
 
 const SinglyLinkedList = (function () {
   const handleError = (msg) => new Error(msg);
 
   class SinglyLinkedList extends Component {
-    constructor({ item, needTail } = {}) {
-      super(needTail);
+    constructor(item, needTail) {
+      super(needTail, createSinglyNode);
       this._TYPE = 'singlyLinked';
 
       if (item) {
@@ -22,7 +27,7 @@ const SinglyLinkedList = (function () {
         );
       }
       if (!(item instanceof Object)) {
-        this.head = new Node(item, this._TYPE);
+        this.head = new Node(item, createSinglyNode);
 
         if ('tail' in this) {
           this.tail = this.head;
@@ -33,7 +38,7 @@ const SinglyLinkedList = (function () {
           startNode: this.head,
           count: this.length,
           endNode: tail,
-        } = createChainNode(item, this._TYPE));
+        } = createChainNode(item, this._TYPE, createSinglyNode));
         if ('tail' in this) {
           this.tail = tail;
         }
