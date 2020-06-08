@@ -1,5 +1,5 @@
 'use strict';
-import {Node} from '../node/node.js';
+import { Node } from '../node/node.js';
 
 export default function (items, type, setNodePointers) {
   if (!Object[Symbol.hasInstance](items)) return;
