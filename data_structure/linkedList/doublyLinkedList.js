@@ -14,11 +14,7 @@ class DoublyLinkedList extends Component {
   constructor(value) {
     super(true, setDoublyNodePointers);
     this._TYPE = 'doublyLinked';
-    this.tail = null;
-
-    if (value) {
-      this.create(value);
-    }
+    value ? this.create(value) : null;
   }
 
   create(value) {

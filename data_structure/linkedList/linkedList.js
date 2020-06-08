@@ -14,10 +14,7 @@ const SinglyLinkedList = (function () {
     constructor(item, needTail) {
       super(needTail, setSinglyNodePointers);
       this._TYPE = 'singlyLinked';
-
-      if (item) {
-        this.create(item);
-      }
+      value ? this.create(item) : null;
     }
 
     create(item) {
