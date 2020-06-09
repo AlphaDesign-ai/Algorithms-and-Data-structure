@@ -281,7 +281,6 @@ export class Component {
   static *fetchNodes(head) {
     if (!head) return;
     let temp = head;
-    debugger;
     do {
       yield temp.data;
       temp = temp.next;
