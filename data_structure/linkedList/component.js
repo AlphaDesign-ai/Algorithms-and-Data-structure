@@ -279,7 +279,7 @@ export class Component {
   }
 
   static *fetchNodes(head) {
-    if (!head || this[Symbol.hasInstance](head)) return;
+    if (!(head || this[Symbol.hasInstance](head))) return;
     let temp = head;
     do {
       yield temp.data;
