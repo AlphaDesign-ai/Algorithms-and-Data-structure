@@ -267,6 +267,7 @@ export class Component {
     const iterable = this.constructor.fetchNodes(
       this.head || this.tail ? this.tail.next : null
     );
+    if (!iterable) return;
     let tempNode = iterable.next();
     const result = [];
     do {
