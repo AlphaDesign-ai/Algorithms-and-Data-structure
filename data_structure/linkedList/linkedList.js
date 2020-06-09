@@ -9,7 +9,6 @@ const setSinglyNodePointers = (_this) => {
 
 const SinglyLinkedList = (function () {
   const handleError = (msg) => new Error(msg);
-
   class SinglyLinkedList extends Component {
     constructor(item, needTail) {
       super(needTail, setSinglyNodePointers);
