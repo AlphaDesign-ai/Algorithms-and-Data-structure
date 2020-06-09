@@ -13,7 +13,7 @@ const setDoublyNodePointers = (_this) => {
 class DoublyLinkedList extends Component {
   constructor(value) {
     super(true, setDoublyNodePointers);
-    this._TYPE = 'doublyLinked';
+    this.constructor.prototype._TYPE = 'doublyLinked';
     value ? this.create(value) : null;
   }
 

@@ -12,7 +12,7 @@ const SinglyLinkedList = (function () {
   class SinglyLinkedList extends Component {
     constructor(item, needTail) {
       super(needTail, setSinglyNodePointers);
-      this._TYPE = 'singlyLinked';
+      this.constructor.prototype._TYPE = 'singlyLinked';
       item ? this.create(item) : null;
     }
 
