@@ -1,5 +1,5 @@
 'use strict';
-import { Node } from '../node/node.js';
+import Node from '../node/node.js';
 
 const connectNode = (firstNode, secondNode) => {
   firstNode.next = secondNode;

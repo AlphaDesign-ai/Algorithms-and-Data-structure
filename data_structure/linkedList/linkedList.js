@@ -1,6 +1,6 @@
 'use strict';
 import { Component } from './component.js';
-import createChainNode from './handleNode.js';
+import { generateNodes } from './handleNode.js';
 import Node from '../node/node.js';
 
 const setSinglyNodePointers = (_this) => {
@@ -30,15 +30,15 @@ const SinglyLinkedList = (function () {
           this.tail = this.head;
         }
       } else {
-        let tail;
-        ({
-          startNode: this.head,
-          count: this.length,
-          endNode: tail,
-        } = createChainNode(item, this._TYPE, this.setNodePointers));
-        if ('tail' in this) {
-          this.tail = tail;
-        }
+        this.head = new Node(item[0], this.setNodePointers);
+        const chainedNode = generateNodes(
+          item,
+          this.head,
+          this.setNodePointers,
+          1
+        );
+        this.length = chainedNode.count;
+        if ('tail' in this) this.tail = chainedNode.endNode;
       }
 
       this.display(this.printNodeItem);
@@ -48,4 +48,3 @@ const SinglyLinkedList = (function () {
 })();
 
 export default SinglyLinkedList;
-
