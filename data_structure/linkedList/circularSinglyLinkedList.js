@@ -3,7 +3,7 @@ import SinglyLinkedList from './linkedList.js';
 
 export default class CircularSinglyLinkedList extends SinglyLinkedList {
   constructor(item) {
-    super({ item, needTail: true });
+    super(item, true);
     if (item) {
       this.connectEnds();
     }
