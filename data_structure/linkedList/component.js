@@ -264,18 +264,30 @@ export class Component {
   }
 
   display(callFn) {
-    let tempNode = this.head || (this.tail ? this.tail.next : null);
-    while (tempNode) {
-      if (callFn) {
-        callFn(tempNode);
-      } else {
-        console.log(tempNode.data);
-      }
-      if (tempNode === this.tail) {
-        return;
-      }
-      tempNode = tempNode.next;
-    }
+    let startNode = this.head || (this.tail ? this.tail.next : null);
+    const iterable = this.constructor.fetchNodes(
+      this.head || this.tail ? this.tail.next : null
+    );
+    let tempNode = iterable.next();
+    const result = [];
+    do {
+      result.push(tempNode.value);
+      if (callFn && Function[Symbol.hasInstance(callFn)])
+        callFn(tempNode.value);
+      tempNode = iterable.next();
+    } while (!tempNode.done);
+    return result;
+  }
+
+  static *fetchNodes(head) {
+    if (!head) return;
+    let temp = head;
+    debugger;
+    do {
+      yield temp.data;
+      temp = temp.next;
+      if (temp === head) break;
+    } while (temp);
   }
 
   removeFromPos(pos) {
