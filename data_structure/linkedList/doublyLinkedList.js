@@ -27,8 +27,10 @@ class DoublyLinkedList extends Component {
       const chainedNodeResult = generateNodes(
         value,
         this.head,
-        this.setNodePointers
+        this.setNodePointers,
+        1
       );
+
       this.length = chainedNodeResult.count;
       this.tail = chainedNodeResult.endNode;
     }
