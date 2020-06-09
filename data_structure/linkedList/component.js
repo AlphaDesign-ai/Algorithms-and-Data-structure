@@ -264,7 +264,6 @@ export class Component {
   }
 
   display(callFn) {
-    let startNode = this.head || (this.tail ? this.tail.next : null);
     const iterable = this.constructor.fetchNodes(
       this.head || this.tail ? this.tail.next : null
     );
