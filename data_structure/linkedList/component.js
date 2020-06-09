@@ -267,9 +267,9 @@ export class Component {
     const iterable = this.constructor.fetchNodes(
       this.head || this.tail ? this.tail.next : null
     );
-    if (!iterable) return;
-    let tempNode = iterable.next();
     const result = [];
+    if (!iterable) return result;
+    let tempNode = iterable.next();
     do {
       result.push(tempNode.value);
       if (callFn && Function[Symbol.hasInstance(callFn)])
