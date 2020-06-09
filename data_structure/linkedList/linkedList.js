@@ -14,7 +14,7 @@ const SinglyLinkedList = (function () {
     constructor(item, needTail) {
       super(needTail, setSinglyNodePointers);
       this._TYPE = 'singlyLinked';
-      value ? this.create(item) : null;
+      item ? this.create(item) : null;
     }
 
     create(item) {
@@ -40,8 +40,6 @@ const SinglyLinkedList = (function () {
         this.length = chainedNode.count;
         if ('tail' in this) this.tail = chainedNode.endNode;
       }
-
-      this.display(this.printNodeItem);
     }
   }
   return SinglyLinkedList;

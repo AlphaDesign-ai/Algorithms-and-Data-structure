@@ -1,6 +1,6 @@
 'use strict';
 import { Component } from './component.js';
-import createChainNode from './handleNode.js';
+import { generateNodes } from './handleNode.js';
 import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
@@ -23,13 +23,13 @@ class DoublyLinkedList extends Component {
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
-      const chainedNodeResult = createChainNode(
+      this.head = new Node(value[0], this.setNodePointers);
+      const chainedNodeResult = generateNodes(
         value,
-        this._TYPE,
+        this.head,
         this.setNodePointers
       );
       this.length = chainedNodeResult.count;
-      this.head = chainedNodeResult.startNode;
       this.tail = chainedNodeResult.endNode;
     }
 

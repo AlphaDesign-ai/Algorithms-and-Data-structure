@@ -13,7 +13,7 @@ export class Component {
     }
     let count = 0;
 
-    this.setNodePointers = cb;
+    this.constructor.prototype.setNodePointers = cb;
     //define the virtual property
     !function () {
       Object.defineProperty(this, 'length', {
