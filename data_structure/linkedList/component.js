@@ -268,8 +268,8 @@ export class Component {
       this.head || this.tail ? this.tail.next : null
     );
     const result = [];
-    if (!iterable) return result;
     let tempNode = iterable.next();
+    if (tempNode.done) return result;
     do {
       result.push(tempNode.value);
       if (callFn && Function[Symbol.hasInstance(callFn)])
