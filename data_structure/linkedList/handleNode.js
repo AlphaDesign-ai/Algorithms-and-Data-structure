@@ -1,32 +1,23 @@
 'use strict';
 import { Node } from '../node/node.js';
 
-export default function (items, type, setNodePointers) {
-  if (!Object[Symbol.hasInstance](items)) return;
+const connectNode = (firstNode, secondNode) => {
+  firstNode.next = secondNode;
+  'prev' in secondNode ? (secondNode.prev = firstNode) : null;
+};
 
-  const chainedResult = { count: 1 };
-
-  //define the start node
-  Object.defineProperty(chainedResult, 'startNode', {
-    value: new Node(items.shift(), setNodePointers),
-    configurable: true,
-    enumerable: true,
-    writable: false,
-  });
-
-  //generate chained node
-  return (function generateChainNode(prev) {
-    if (!items.length) {
-      chainedResult.endNode = prev;
-      return chainedResult;
+export const generateNodes = (item, startNode, setPointer, count) => {
+  if (!Object[Symbol.hasInstance](item)) return;
+  return (function gen(nodeStarter, prev, item, count) {
+    if (count === item.length) {
+      return { startNode: nodeStarter, endNode: prev, count: count + 1 };
     }
-    const newNode = new Node(items.shift(), setNodePointers);
-    prev.next = newNode;
-    if (type === 'doublyLinked') {
-      newNode.prev = prev;
+    if (!prev) {
+      prev = nodeStarter;
     }
-    chainedResult.count += 1;
+    const newNode = new Node(item[count], setPointer);
+    connectNode(prev, newNode);
 
-    return generateChainNode(newNode);
-  })(chainedResult.startNode);
-}
+    return gen(nodeStarter, newNode, item, ++count, setPointer);
+  })(startNode, null, [...item], typeof count === 'number' ? count : 0);
+};

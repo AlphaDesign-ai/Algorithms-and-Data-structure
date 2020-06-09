@@ -1,5 +1,5 @@
 'use strict';
-import createChainNode from './handleNode.js';
+import { generateNodes } from './handleNode.js';
 import Node from '../node/node.js';
 
 const INCREMENT_ONE = 1;
@@ -46,7 +46,6 @@ export class Component {
     if (item !== 0 && !item) {
       throw handleError('Enter a value to append');
     }
-    console.log(createNode);
 
     if (!(item instanceof Array)) {
       const newNode = new Node(item, this.setNodePointers);
@@ -61,7 +60,8 @@ export class Component {
       this.head = newNode;
       this.length = INCREMENT_ONE;
     } else {
-      const result = createChainNode(item, this._TYPE, this.setNodePointers);
+      const newNode = new Node(item[0], this.setNodePointers);
+      const result = generateNodes(item, newNode, this.setNodePointers, 1);
       const tempNode = this.head;
 
       this.head = result.startNode;
@@ -119,7 +119,8 @@ export class Component {
     }
     //check is item is an object
     else if (Array.isArray(item) || item instanceof Object) {
-      const result = createChainNode(item, this._TYPE, this.setNodePointers);
+      const newNode = new Node(item[0], this.setNodePointers);
+      const result = get(item, newNode, this.setNodePointers, 1);
       if (!lastNode) {
         this.head = result.startNode;
 
@@ -209,15 +210,18 @@ export class Component {
       throw handleError('invalid position.');
     }
     //perform append or prepend
-    if (pos === INCREMENT_ONE || pos === this.length + INCREMENT_ONE) {
+    if (
+      (pos === INCREMENT_ONE || pos === this.length + INCREMENT_ONE) &&
+      !this.head
+    ) {
       return this[pos === INCREMENT_ONE ? 'prepend' : 'append'](item);
     }
+
     const prevNode = this.getNode(pos - INCREMENT_ONE);
     const nextNode = prevNode.next;
     if (item instanceof Object) {
-      const chainedNode = createChainNode(item, this._TYPE, this.setNodePointers);
+      const chainedNode = generateNodes(item, prevNode, this.setNodePointers);
       //perform linking of chain node
-      prevNode.next = chainedNode.startNode;
       nextNode.prev = chainedNode.endNode;
       this.length = chainedNode.count;
     } else {
