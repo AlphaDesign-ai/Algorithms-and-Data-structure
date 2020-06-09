@@ -120,7 +120,7 @@ export class Component {
     //check is item is an object
     else if (Array.isArray(item) || item instanceof Object) {
       const newNode = new Node(item[0], this.setNodePointers);
-      const result = get(item, newNode, this.setNodePointers, 1);
+      const result = generateNodes(item, newNode, this.setNodePointers, 1);
       if (!lastNode) {
         this.head = result.startNode;
 

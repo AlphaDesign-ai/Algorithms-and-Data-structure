@@ -10,7 +10,7 @@ export const generateNodes = (item, startNode, setPointer, count) => {
   if (!Object[Symbol.hasInstance](item)) return;
   return (function gen(nodeStarter, prev, item, count) {
     if (count === item.length) {
-      return { startNode: nodeStarter, endNode: prev, count: count + 1 };
+      return { startNode: nodeStarter, endNode: prev, count: count };
     }
     if (!prev) {
       prev = nodeStarter;
