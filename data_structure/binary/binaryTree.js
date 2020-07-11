@@ -1,24 +1,14 @@
+import {
+  gatherNode,
+  leafDeepestFind,
+  findAndKeepParent,
+  deepCloneObject,
+} from '../../utility/util.js';
 export function BinaryTree(val) {
   this.value = val;
   this.left = null;
   this.right = null;
 }
-
-const gatherNode = function (type) {
-  const result = [];
-  if (type) {
-    result.type = type;
-  }
-  let hasReturned = false;
-  return function get(val) {
-    if (val != null && !hasReturned) {
-      return void result.push(Object(val) === val ? val.value : val);
-    } else if (!hasReturned) {
-      hasReturned = true;
-    }
-    return result;
-  };
-};
 
 export default class Binary {
   static types = [
@@ -67,6 +57,23 @@ export default class Binary {
       let rightCompare = comparer(node1.right, node2.right);
       return leftCompare && rightCompare;
     })(tree1._root, tree2._root);
+  }
+
+  static mirrorOfBinaryTree(binaryTree) {
+    const tree = deepCloneObject(binaryTree._root || binaryTree.root);
+    function mirrorTree(tree) {
+      let temp;
+      if (tree) {
+        mirrorTree(tree.left);
+        mirrorTree(tree.right);
+        temp = tree.left;
+        tree.left = tree.right;
+        tree.right = temp;
+      }
+      return tree;
+    }
+
+    return mirrorTree(tree);
   }
 
   preOrderTraversal(cb = console.log, node = this._root) {
@@ -141,8 +148,8 @@ export default class Binary {
       rightMax = this.findMax(node.right);
     }
 
-    let maxChild = leftMax > rightMax ? leftMax : rightMax;
-    return nodeVal > maxChild ? nodeVal : maxChild;
+    let maxChild = Math.max(leftMax, rightMax);
+    return Math.max(nodeVal, maxChild);
   }
 
   find(data) {
@@ -163,6 +170,22 @@ export default class Binary {
     })(node || this._root);
   }
 
+  delete(val) {
+    const deepestNode = leafDeepestFind(this._root, 'root');
+    const leafNode = deepestNode.leaf;
+    let removeNode = { child: this._root, parent: null };
+    deepestNode.parent[deepestNode.type] = null;
+    //perform remove and swapping
+    if (this._root.value !== val) {
+      removeNode = findAndKeepParent(this._root, 'value', val);
+      removeNode.parent[removeNode.type] = leafNode;
+    } else {
+      this._root = leafNode;
+    }
+    leafNode.left = removeNode.child.left;
+    leafNode.right = removeNode.child.right;
+  }
+
   deleteTree() {
     return (this._root = null);
   }
@@ -172,28 +195,12 @@ export default class Binary {
       if (node == null) return -1;
       let left = getTreeHeight(node.left);
       let right = getTreeHeight(node.right);
-      return left > right ? left + 1 : right + 1;
+      return Math.max(left, right) + 1;
     })(node || this._root);
   }
 
   findDeepestNode(node = this._root) {
-    let temp = node;
-    let queue;
-    if (!temp) return;
-    queue = [];
-    queue.push(temp);
-
-    while (queue.length) {
-      temp = queue.shift();
-      if (temp.left) {
-        queue.push(temp.left);
-      }
-
-      if (temp.right) {
-        queue.push(temp.right);
-      }
-    }
-    return temp;
+    return leafDeepestFind(node, -1).leaf.value;
   }
 
   NumberOfLeaves(node) {
@@ -226,6 +233,32 @@ export default class Binary {
       let fullHalf = getHalfNode(node.right, leftHalf);
       return fullHalf;
     })(node || this._root, 0);
+  }
+
+  findLevelWithMaxSum(node = this._root) {
+    function findMaxLevel(
+      node,
+      level = 0,
+      tracker = { levels: {}, max: 0, maxLevel: 0 }
+    ) {
+      if (!node) return tracker.max;
+      if (level in tracker.levels) {
+        tracker.levels[level].push(node.value);
+      } else {
+        tracker.levels[level] = [node.value];
+      }
+      const curMax = tracker.levels[level].reduce(sum, 0);
+      tracker.max = Math.max(tracker.max, curMax);
+      tracker.maxLevel = Object.is(curMax, tracker.max)
+        ? level
+        : tracker.maxLevel;
+      findMaxLevel(node.left, level + 1, tracker);
+      findMaxLevel(node.right, level + 1, tracker);
+
+      return tracker.maxLevel;
+    }
+
+    return findMaxLevel(node);
   }
 
   isExist(node) {
