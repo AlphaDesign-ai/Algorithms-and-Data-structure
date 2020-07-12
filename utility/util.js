@@ -1,17 +1,24 @@
-export const packNodeIntoList = function (type) {
-  const result = [];
-  if (type) {
-    result.type = type;
-  }
-  let hasReturned = false;
-  return function collectNode(val) {
-    if (val != null && !hasReturned) {
-      return void result.push(Object(val) === val ? val.value : val);
-    } else if (!hasReturned) {
-      hasReturned = true;
+function putIntoList(fn, detail) {
+  let list = [];
+  return function returnWhenDone(val) {
+    if (val === undefined) {
+      return Object.assign([...list], removeUndefine({ ...detail }));
     }
-    return result;
+    fn(val, list);
   };
+}
+
+function removeUndefine(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export const packNodeIntoList = function (type) {
+  return putIntoList(
+    function collectNode(val, list) {
+      list.push(Object(val) === val ? val.value : val);
+    },
+    { type }
+  );
 };
 
 function compareTracker(node1, node2) {
