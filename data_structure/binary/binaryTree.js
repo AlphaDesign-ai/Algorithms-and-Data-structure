@@ -1,6 +1,6 @@
 import {
-  gatherNode,
-  leafDeepestFind,
+  packNodeIntoList,
+  findDeepestLeaf,
   findAndKeepParent,
   deepCloneObject,
 } from '../../utility/util.js';
@@ -42,7 +42,7 @@ export default class Binary {
             '. `inOrderTraversal` is use by default'
         );
       }
-      const result = gatherNode(type);
+      const result = packNodeIntoList(type);
       binaryTree[type](result);
       return result();
     };
@@ -200,7 +200,7 @@ export default class Binary {
   }
 
   findDeepestNode(node = this._root) {
-    return leafDeepestFind(node, -1).leaf.value;
+    return findDeepestLeaf(node, -1).leaf.value;
   }
 
   NumberOfLeaves(node) {
@@ -265,7 +265,7 @@ export default class Binary {
     return Boolean(node);
   }
 
-  traversalInReverse(node = this._root, cb = gatherNode()) {
+  traversalInReverse(node = this._root, cb = packNodeIntoList()) {
     let queue = [];
     let stack = [];
     let temp = node || this._root;

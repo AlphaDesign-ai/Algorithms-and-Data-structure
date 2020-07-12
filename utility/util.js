@@ -1,10 +1,10 @@
-export const gatherNode = function (type) {
+export const packNodeIntoList = function (type) {
   const result = [];
   if (type) {
     result.type = type;
   }
   let hasReturned = false;
-  return function get(val) {
+  return function collectNode(val) {
     if (val != null && !hasReturned) {
       return void result.push(Object(val) === val ? val.value : val);
     } else if (!hasReturned) {
@@ -56,23 +56,23 @@ export function deepCloneObject(obj) {
   })(obj, []);
 }
 
-export function leafDeepestFind(node, type, tracker = 0) {
+export function findDeepestLeaf(node, type, tracker = 0) {
   tracker++;
   if (!node.left && !node.right) return { leaf: node, count: tracker, type };
   if (node.left && node.right) {
     return mergeNode(
       node,
       compareTracker(
-        leafDeepestFind(node.left, 'left', tracker),
-        leafDeepestFind(node.right, 'right', tracker)
+        findDeepestLeaf(node.left, 'left', tracker),
+        findDeepestLeaf(node.right, 'right', tracker)
       )
     );
   }
   return mergeNode(
     node,
     !node.left
-      ? leafDeepestFind(node.right, 'right', tracker)
-      : leafDeepestFind(node.left, 'left', tracker)
+      ? findDeepestLeaf(node.right, 'right', tracker)
+      : findDeepestLeaf(node.left, 'left', tracker)
   );
 }
 
@@ -131,7 +131,7 @@ export function printPathsRecur(node) {
   return pathTracker(node);
 }
 
-export function AreMirrors(tree1, tree2) {
+export function areMirrors(tree1, tree2) {
   function compareTree(tree1, tree2) {
     if (!(tree1 && tree2)) return true;
     if (!(tree1 || tree2)) return false;
@@ -156,4 +156,13 @@ export function LCA(node, a, b) {
     return (left && right) || left || right;
   }
   return getLCA(node, a, b);
+}
+
+export function checkSumInPath(node, sum) {
+  if (!(sum || node)) return true;
+  if (!(sum && node)) return false;
+  return (
+    checkSumInPath(node.left, sum - node.value) ||
+    checkSumInPath(node.right, sum - node.value)
+  );
 }
