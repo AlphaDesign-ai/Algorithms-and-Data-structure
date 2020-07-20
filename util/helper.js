@@ -7,11 +7,11 @@ export function gatherToList(info) {
   let pipeFns = [];
 
   const changeState = util.bindState(function setState(newState) {
-    //mutate state
-    state = util.merge(state, newState);
+    state = util.merge(state, newState); //mutate state
   });
+
   const accessScope = function scopeVariable() {
-    return state;
+    return deepCloneObject(state);
   };
   const checkTrueState = util.getTruthInObj(accessScope);
 
