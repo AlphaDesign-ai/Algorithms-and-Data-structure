@@ -2,8 +2,9 @@ import {
   packNodeIntoList,
   findDeepestLeaf,
   findAndKeepParent,
-} from '../../utility/util.js';
-import { deepCloneObject } from '../../utility/helper.js';
+} from '../../util/binary/binaryHelper.js';
+
+import { deepCloneObject } from '../../util/helper.js';
 export function BinaryTree(val) {
   this.value = val;
   this.left = null;

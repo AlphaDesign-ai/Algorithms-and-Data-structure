@@ -1,7 +1,11 @@
-import * as helper from './helper.js';
+import * as util from '../utility.js';
+import * as helper from '../helper.js';
+
+import { BinaryTree } from '../../data_structure/binary/binaryTree.js';
+import BinarySearch from '../../data_structure/binary/binarySearch/binarySearch.js';
 
 export const packNodeIntoList = function (fn, type) {
-  const packer = helper.putIntoList(type instanceof Object ? type : { type });
+  const packer = helper.gatherToList(util.isObject(type) ? type : { type });
   if (typeof fn === 'function') packer.mapMethod(fn);
   return packer;
 };
@@ -10,15 +14,15 @@ export function findDeepestLeaf(node, type, tracker = 0) {
   tracker++;
   if (!node.left && !node.right) return { leaf: node, count: tracker, type };
   if (node.left && node.right) {
-    return helper.mergeNode(
+    return util.mergeNode(
       node,
-      helper.compareTracker(
+      util.compareTracker(
         findDeepestLeaf(node.left, 'left', tracker),
         findDeepestLeaf(node.right, 'right', tracker)
       )
     );
   }
-  return helper.mergeNode(
+  return util.mergeNode(
     node,
     !node.left
       ? findDeepestLeaf(node.right, 'right', tracker)
@@ -36,10 +40,10 @@ export function findAndKeepParent(node, id, val) {
     const leftFind = finder(node.left, 'left');
     const rightFind = finder(node.right, 'right');
     if (leftFind && !leftFind.parent) {
-      return helper.mergeNode(node, leftFind);
+      return util.mergeNode(node, leftFind);
     }
     if (rightFind && !rightFind.parent) {
-      return helper.mergeNode(node, rightFind);
+      return util.mergeNode(node, rightFind);
     }
 
     return leftFind || rightFind;
@@ -118,22 +122,27 @@ export function checkSumInPath(node, sum) {
 }
 
 export function constructTreeIP(inOrder, preOrder) {
-  const getIndex = helper.getElIdxWithVal(inOrder);
+  const getIndex = util.getElIdxWithVal(inOrder);
+  const createTree = util.createTree(BinaryTree);
+
   function buildTree(preOrder, track, start, end = preOrder.length) {
     if (start >= end) return null;
     const result = getIndex(preOrder[track.level++], start, end);
-    const rootNode = helper.createTree(result.val);
+    const rootNode = createTree(result.val);
     //recur call to construct sub tree
     rootNode.left = buildTree(preOrder, track, start, result.idx);
     rootNode.right = buildTree(preOrder, track, result.idx + 1, end);
     return rootNode;
   }
-  return helper.convertToBinaryTree(buildTree(preOrder, { level: 0 }, 0));
+  return util.convertToBinaryTree(
+    buildTree(preOrder, { level: 0 }, 0),
+    BinarySearch
+  );
 }
 
 export function printAllAncestor(rootNode, node, cb) {
-  let isObj = Object(node) === node;
-  const extractor = helper.getPropOnlyIf(isObj);
+  let predicate = Object(node) === node;
+  const extractor = util.getPropOnlyIf(predicate);
   function getAncestor(rootNode, node, isObj, extractor, cb = console.log) {
     if (!rootNode) return false;
     let leftCompare = extractor(rootNode.left, 'value') === node;
@@ -148,7 +157,7 @@ export function printAllAncestor(rootNode, node, cb) {
     }
     return false;
   }
-  return getAncestor(rootNode, node, isObj, extractor, cb);
+  return getAncestor(rootNode, node, predicate, extractor, cb);
 }
 
 export function zigzagTraversal(node, cb) {
