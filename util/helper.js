@@ -8,7 +8,7 @@ export function gatherToList(info) {
 
   const changeState = util.bindState(function setState(newState) {
     //mutate state
-    state = Object.assign({}, state, newState);
+    state = util.merge(state, newState);
   });
   const accessScope = function scopeVariable() {
     return state;
