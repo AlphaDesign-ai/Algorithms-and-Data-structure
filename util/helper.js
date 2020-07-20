@@ -6,14 +6,14 @@ export function gatherToList(info) {
   let method = null;
   let pipeFns = [];
 
-  const changeState = util.bindState(function setState(newState) {
+  const setState = util.bindState(function setState(newState) {
     state = util.merge(state, newState); //mutate state
   });
 
-  const accessScope = function scopeVariable() {
+  const cloneState = function connectState() {
     return deepCloneObject(state);
   };
-  const checkTrueState = util.getTruthInObj(accessScope);
+  const checkTruthyInState = util.getTruthInObj(cloneState);
 
   function pack(val) {
     //list of compose function
@@ -25,27 +25,27 @@ export function gatherToList(info) {
   }
 
   function isAccepted(val) {
-    if (!checkTrueState('isGathering')) {
+    if (!checkTruthyInState('isGathering')) {
       //mutate state
-      changeState({ isGathering: true });
+      setState({ isGathering: true });
       //push to the newly created list
       list = Array.of(val);
     } else {
       list.push(val);
     }
     //verify if done
-    return checkTrueState('isGathering', 'isDone'); //{isGathering: false, isDone: true}
+    return checkTruthyInState('isGathering', 'isDone'); //{isGathering: false, isDone: true}
   }
 
   function done(clear) {
     //clone the list
     const result = util.shallowCloneObj(list);
     //mutate state
-    changeState({ isGathering: false, isDone: true });
+    setState({ isGathering: false, isDone: true });
     //reset back to initial state
     if (clear) reset();
 
-    return util.mergeTwoInFirst(result, util.stripUndefined(info));
+    return util.mergeSecToFirst(result, util.stripUndefined(info));
   }
 
   function mapMethod(val) {
@@ -60,7 +60,7 @@ export function gatherToList(info) {
   }
 
   function reset() {
-    changeState({ isGathering: false, isDone: false });
+    setState({ isGathering: false, isDone: false });
     list = method = null;
   }
 

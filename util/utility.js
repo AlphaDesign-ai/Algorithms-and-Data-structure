@@ -95,7 +95,7 @@ export function getProp(obj) {
   };
 }
 
-export function mergeTwoInFirst(target, source) {
+export function mergeSecToFirst(target, source) {
   return Object.assign(target, source);
 }
 
