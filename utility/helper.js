@@ -117,7 +117,7 @@ export function putIntoList(info) {
       list.push(val);
     }
     //verify if done
-    return checkTrueState('isGathering', 'isDone');
+    return checkTrueState('isGathering', 'isDone'); //{isGathering: false, isDone: true}
   }
 
   function done(clear) {
