@@ -83,7 +83,7 @@ function pipe(...fns) {
   });
 }
 
-export function putIntoList() {
+export function putIntoList(info) {
   let list = null;
   let state = { isGathering: false, isDone: false };
   let method = null;
@@ -127,7 +127,8 @@ export function putIntoList() {
     changeState({ isGathering: false, isDone: true });
     //reset back to initial state
     if (clear) reset();
-    return result;
+
+    return mergeTwoInFirst(result, stripUndefined(info));
   }
 
   function mapMethod(val) {
@@ -204,4 +205,8 @@ function getProp(obj) {
         return val;
     }
   };
+}
+
+function mergeTwoInFirst(target, source) {
+  return Object.assign(target, source);
 }
