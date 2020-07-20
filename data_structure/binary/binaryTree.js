@@ -2,8 +2,8 @@ import {
   packNodeIntoList,
   findDeepestLeaf,
   findAndKeepParent,
-  deepCloneObject,
 } from '../../utility/util.js';
+import { deepCloneObject } from '../../utility/helper.js';
 export function BinaryTree(val) {
   this.value = val;
   this.left = null;
@@ -42,9 +42,9 @@ export default class Binary {
             '. `inOrderTraversal` is use by default'
         );
       }
-      const result = packNodeIntoList(type);
-      binaryTree[type](result);
-      return result();
+      const result = packNodeIntoList(null, type);
+      binaryTree[type](result.pack);
+      return result.done();
     };
     return nodeParker;
   }
@@ -113,7 +113,7 @@ export default class Binary {
       this.postOrderTraversal(cb, node.right);
     }
 
-    cb(node);
+    cb(node.value);
   }
 
   levelOrderTraversal(cb = console.log) {
@@ -265,7 +265,7 @@ export default class Binary {
     return Boolean(node);
   }
 
-  traversalInReverse(node = this._root, cb = packNodeIntoList()) {
+  traversalInReverse(node = this._root, packer = packNodeIntoList()) {
     let queue = [];
     let stack = [];
     let temp = node || this._root;
@@ -279,8 +279,12 @@ export default class Binary {
     }
 
     do {
-      cb(stack.pop());
+      if (typeof packer === 'object' && packer.pack) {
+        packer.pack(stack.pop().value);
+        if (!stack.length) return packer.done();
+      } else {
+        cb(stack.pop().value);
+      }
     } while (stack.length);
-    return cb();
   }
 }

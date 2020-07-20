@@ -1,81 +1,24 @@
-function putIntoList(fn, detail) {
-  let list = [];
-  return function returnWhenDone(val) {
-    if (val === undefined) {
-      return Object.assign([...list], removeUndefine({ ...detail }));
-    }
-    fn(val, list);
-  };
-}
+import * as helper from './helper.js';
 
-function removeUndefine(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
-export const packNodeIntoList = function (type) {
-  return putIntoList(
-    function collectNode(val, list) {
-      list.push(Object(val) === val ? val.value : val);
-    },
-    { type }
-  );
+export const packNodeIntoList = function (fn, type) {
+  const packer = helper.putIntoList(type instanceof Object ? type : { type });
+  if (typeof fn === 'function') packer.mapMethod(fn);
+  return packer;
 };
-
-function compareTracker(node1, node2) {
-  return node1.count > node2.count ? node1 : node2;
-}
-
-function mergeNode(parent, node) {
-  return Object.assign({ parent }, node);
-}
-
-export function deepCloneObject(obj) {
-  return (function clone(obj, traversedObjects) {
-    if (typeof obj !== 'object' || obj == undefined) return obj;
-
-    //detect cycle
-    for (let i = 0; i < traversedObjects.length; i++) {
-      if (traversedObjects[i] === obj) {
-        throw new Error('cannot clone circular object.');
-      }
-    }
-
-    if (obj instanceof Date) {
-      return new Date(obj);
-    }
-
-    if (obj instanceof Array) {
-      let cloneArray = [];
-      for (let item of obj) {
-        cloneArray.push(clone(item, traversedObjects.concat(obj)));
-      }
-      return cloneArray;
-    }
-
-    if (obj instanceof Object) {
-      var cloneObj = {};
-      for (let key in obj) {
-        cloneObj[key] = clone(obj[key], traversedObjects.concat(obj));
-      }
-      return cloneObj;
-    }
-    throw new Error('Not a cloneable object');
-  })(obj, []);
-}
 
 export function findDeepestLeaf(node, type, tracker = 0) {
   tracker++;
   if (!node.left && !node.right) return { leaf: node, count: tracker, type };
   if (node.left && node.right) {
-    return mergeNode(
+    return helper.mergeNode(
       node,
-      compareTracker(
+      helper.compareTracker(
         findDeepestLeaf(node.left, 'left', tracker),
         findDeepestLeaf(node.right, 'right', tracker)
       )
     );
   }
-  return mergeNode(
+  return helper.mergeNode(
     node,
     !node.left
       ? findDeepestLeaf(node.right, 'right', tracker)
@@ -93,10 +36,10 @@ export function findAndKeepParent(node, id, val) {
     const leftFind = finder(node.left, 'left');
     const rightFind = finder(node.right, 'right');
     if (leftFind && !leftFind.parent) {
-      return mergeNode(node, leftFind);
+      return helper.mergeNode(node, leftFind);
     }
     if (rightFind && !rightFind.parent) {
-      return mergeNode(node, rightFind);
+      return helper.mergeNode(node, rightFind);
     }
 
     return leftFind || rightFind;
@@ -172,4 +115,65 @@ export function checkSumInPath(node, sum) {
     checkSumInPath(node.left, sum - node.value) ||
     checkSumInPath(node.right, sum - node.value)
   );
+}
+
+export function constructTreeIP(inOrder, preOrder) {
+  const getIndex = helper.getElIdxWithVal(inOrder);
+  function buildTree(preOrder, track, start, end = preOrder.length) {
+    if (start >= end) return null;
+    const result = getIndex(preOrder[track.level++], start, end);
+    const rootNode = helper.createTree(result.val);
+    //recur call to construct sub tree
+    rootNode.left = buildTree(preOrder, track, start, result.idx);
+    rootNode.right = buildTree(preOrder, track, result.idx + 1, end);
+    return rootNode;
+  }
+  return helper.convertToBinaryTree(buildTree(preOrder, { level: 0 }, 0));
+}
+
+export function printAllAncestor(rootNode, node, cb) {
+  let isObj = Object(node) === node;
+  const extractor = helper.getPropOnlyIf(isObj);
+  function getAncestor(rootNode, node, isObj, extractor, cb = console.log) {
+    if (!rootNode) return false;
+    let leftCompare = extractor(rootNode.left, 'value') === node;
+    let rightCompare = extractor(rootNode.right, 'value') === node;
+    if (
+      leftCompare ||
+      rightCompare ||
+      getAncestor(rootNode.left, node, isObj, extractor, cb) ||
+      getAncestor(rootNode.right, node, isObj, extractor, cb)
+    ) {
+      return cb(!isObj ? rootNode.value : rootNode), true;
+    }
+    return false;
+  }
+  return getAncestor(rootNode, node, isObj, extractor, cb);
+}
+
+export function zigzagTraversal(node, cb) {
+  let temp;
+  let ltr = 1;
+  if (!node) return;
+  let currentLevel = [];
+  let nextLevel = [];
+  currentLevel.push(node);
+  while (currentLevel.length) {
+    temp = currentLevel.pop();
+    if (temp) {
+      cb(temp.value);
+      if (ltr) {
+        if (temp.left) nextLevel.push(temp.left);
+        if (temp.right) nextLevel.push(temp.right);
+      } else {
+        if (temp.right) nextLevel.push(temp.right);
+        if (temp.left) nextLevel.push(temp.left);
+      }
+    }
+
+    if (!currentLevel.length) {
+      ltr = 1 - ltr;
+      [currentLevel, nextLevel] = [nextLevel, currentLevel];
+    }
+  }
 }
