@@ -30,11 +30,9 @@ export function gatherToList(info) {
       setState({ isGathering: true });
       //push to the newly created list
       list = Array.of(val);
-    } else {
+    } else if (!checkTruthyInState('isGathering', 'isDone')) {
       list.push(val);
     }
-    //verify if done
-    return checkTruthyInState('isGathering', 'isDone'); //{isGathering: false, isDone: true}
   }
 
   function done(clear) {
@@ -43,7 +41,7 @@ export function gatherToList(info) {
     //mutate state
     setState({ isGathering: false, isDone: true });
     //reset back to initial state
-    if (clear) reset();
+    if (clear) resetState();
 
     return util.mergeSecToFirst(result, util.stripUndefined(info));
   }
@@ -59,7 +57,7 @@ export function gatherToList(info) {
     pipeFns.push(...fn);
   }
 
-  function reset() {
+  function resetState() {
     setState({ isGathering: false, isDone: false });
     list = method = null;
   }
@@ -68,7 +66,7 @@ export function gatherToList(info) {
     pack,
     done,
     mapMethod,
-    reset,
+    reset: resetState,
     pipeline,
   });
 }
