@@ -15,6 +15,11 @@ export function gatherToList(info) {
   };
   const checkTruthyInState = util.getTruthInObj(cloneState);
 
+  const mutateList = function (val) {
+    if (!list) return (list = [val]);
+    list.push(val);
+  };
+
   function pack(val) {
     //list of compose function
     const composer = util.pipe(...pipeFns);
@@ -28,10 +33,9 @@ export function gatherToList(info) {
     if (!checkTruthyInState('isGathering')) {
       //mutate state
       setState({ isGathering: true });
-      //push to the newly created list
-      list = Array.of(val);
-    } else if (!checkTruthyInState('isGathering', 'isDone')) {
-      list.push(val);
+    }
+    if (!checkTruthyInState('isGathering', 'isDone')) {
+      mutateList(val);
     }
   }
 
