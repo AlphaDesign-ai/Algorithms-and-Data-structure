@@ -186,3 +186,48 @@ export function zigzagTraversal(node, cb) {
     }
   }
 }
+
+export function verticalSumInBinaryTree(node) {
+  let result = new Map();
+  function verticalSum(node, column, result) {
+    if (node == null) return;
+    verticalSum(node.left, column - 1, result);
+    if (result.has(column)) {
+      result.set(column, node.value + result.get(column));
+    } else {
+      result.set(column, node.value);
+    }
+    verticalSum(node.right, column + 1, result);
+  }
+
+  return verticalSum(node, 0, result), [...result.values()];
+}
+
+export function buildTreeFromPreOrderID(nodeTypeIndicator) {
+  function buildTree(nodeType, counter) {
+    if (nodeType.length <= 1) return null;
+    let count = counter.count++;
+    let newNode = new BinaryTree(nodeType[count]);
+    if (nodeType[count] === 'L') return newNode;
+    newNode.left = buildTree(nodeType, counter);
+    newNode.right = buildTree(nodeType, counter);
+    return newNode;
+  }
+
+  return buildTree(nodeTypeIndicator, { count: 0 });
+}
+
+export function fillNextSibling(rootNode) {
+  function setSibling(node) {
+    if (!node) return null;
+    !node.nextSibling && (node.nextSibling = null);
+    if (node.left) node.left.nextSibling = node.right || null;
+    if (node.right) {
+      node.right.nextSibling = node.nextSibling ? node.nextSibling : null;
+    }
+
+    fillNextSibling(node.left);
+    fillNextSibling(node.right);
+  }
+  return setSibling(rootNode), rootNode;
+}

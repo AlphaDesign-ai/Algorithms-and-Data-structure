@@ -10,15 +10,20 @@ export function gatherToList(info) {
     state = util.merge(state, newState); //mutate state
   });
 
-  const cloneState = function connectState() {
-    return deepCloneObject(state);
-  };
-  const checkTruthyInState = util.getTruthInObj(cloneState);
-
   const mutateList = function (val) {
     if (!list) return (list = [val]);
     list.push(val);
   };
+
+  const clearEnv = function () {
+    list = method = null;
+    pipeFns = [];
+  };
+
+  const cloneState = function connectState() {
+    return deepCloneObject(state);
+  };
+  const checkTruthyInState = util.getTruthInObj(cloneState);
 
   function pack(val) {
     //list of compose function
@@ -63,7 +68,7 @@ export function gatherToList(info) {
 
   function resetState() {
     setState({ isGathering: false, isDone: false });
-    list = method = null;
+    clearEnv();
   }
 
   return Object.freeze({
