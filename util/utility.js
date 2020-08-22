@@ -102,3 +102,11 @@ export function mergeSecToFirst(target, source) {
 export function merge(...args) {
   return Object.assign({}, ...args);
 }
+
+export function _has(obj, val) {
+  return val in obj;
+}
+
+export function isFinite(x) {
+  return Number.isFinite(x);
+}
