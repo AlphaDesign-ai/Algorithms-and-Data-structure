@@ -231,3 +231,60 @@ export function fillNextSibling(rootNode) {
   }
   return setSibling(rootNode), rootNode;
 }
+
+export function isIsomorphic(tree1, tree2) {
+  function check4Isomorphism(node1, node2) {
+    if ([node1, node2].every(util.isEmpty)) {
+      return true;
+    }
+    if ([node1, node2].some(util.isEmpty)) {
+      return false;
+    }
+    return (
+      check4Isomorphism(node1.left, node2.left) &&
+      check4Isomorphism(node1.right, node2.right)
+    );
+  }
+
+  return check4Isomorphism(tree1._root || tree1, tree2._root || tree2);
+}
+
+export function quasiIsomorphic(tree1, tree2) {
+  function check4QuasiIsomorphism(node1, node2) {
+    if ([node1, node2].every(util.isEmpty)) {
+      return true;
+    }
+    if ([node1, node2].some(util.isEmpty)) {
+      return false;
+    }
+    return (
+      (check4QuasiIsomorphism(node1.left, node2.left) &&
+        check4QuasiIsomorphism(node1.right, node2.right)) ||
+      (check4QuasiIsomorphism(node1.left, node2.right) &&
+        check4QuasiIsomorphism(node1.right, node2.left))
+    );
+  }
+  return check4QuasiIsomorphism(tree1._root || tree1, tree2._root || tree2);
+}
+
+function K_aryTreeNode(data) {
+  this.value = data;
+  this.child = [];
+}
+
+export function buildK_aryTree(list, kTreeType) {
+  function buildTree(list, k, n, level) {
+    if (n <= 0) return null;
+    const newNode = new K_aryTreeNode(list[level.i]);
+    for (let i = 0; i < k; i++) {
+      if (k * level.i + i < n) {
+        level.i++;
+        newNode.child[i] = buildTree(list, k, n, level);
+      } else {
+        newNode.child[i] = null;
+      }
+    }
+    return newNode;
+  }
+  return buildTree(list, kTreeType, list.length, { i: 0 });
+}

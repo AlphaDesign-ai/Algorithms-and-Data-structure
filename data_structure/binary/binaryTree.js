@@ -4,7 +4,7 @@ import {
   findAndKeepParent,
 } from '../../util/binary/binaryHelper.js';
 
-import { deepCloneObject } from '../../util/helper.js';
+import { deepCloneObject } from '../../util/utility.js';
 export function BinaryTree(val) {
   this.value = val;
   this.left = null;

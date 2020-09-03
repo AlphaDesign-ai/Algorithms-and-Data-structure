@@ -1,21 +1,14 @@
 'use strict';
-import { generateNodes } from './handleNode.js';
-import Node from '../node/node.js';
+import { getNodeAt, isTruthy, _has, isFinite } from '../../util/utility.js';
 
-const INCREMENT_ONE = 1;
-const handleError = (msg) => new Error(msg);
-
-export class Component {
-  constructor(needTail, cb) {
+export default class LinkedList {
+  constructor(needTail) {
     this.head = null;
-    if (needTail) {
-      this.tail = null;
-    }
-    let count = 0;
+    needTail && (this.tail = null);
 
-    this.constructor.prototype.setNodePointers = cb;
     //define the virtual property
-    !function () {
+    !function counterIIFE() {
+      let count = 0;
       Object.defineProperty(this, 'length', {
         get() {
           return count;
@@ -31,167 +24,37 @@ export class Component {
     }.call(this);
   }
 
-  getNode(position) {
-    let tempNode = this.head;
-    if (!tempNode) return tempNode;
-    let increment = 1;
-    while (!Object.is(tempNode.next, null) && increment < position) {
-      tempNode = tempNode.next;
-      increment++;
-    }
-    return tempNode;
-  }
-
-  prepend(item) {
-    if (item !== 0 && !item) {
-      throw handleError('Enter a value to append');
-    }
-
-    if (!(item instanceof Array)) {
-      const newNode = new Node(item, this.setNodePointers);
-
-      if (this.head) {
-        newNode.next = this.head;
-        if (this._TYPE === 'doublyLinked') this.head.prev = newNode;
-      }
-      if (!this.head && 'tail' in this) {
-        this.tail = this.head;
-      }
-      this.head = newNode;
-      this.length = INCREMENT_ONE;
-    } else {
-      const newNode = new Node(item[0], this.setNodePointers);
-      const result = generateNodes(item, newNode, this.setNodePointers, 1);
-      const tempNode = this.head;
-
-      this.head = result.startNode;
-
-      if (tempNode) {
-        result.endNode.next = tempNode;
-
-        if (this._TYPE !== 'singlyLinked') {
-          tempNode.prev = result.endNode;
-        }
-      }
-
-      if ('tail' in this) {
-        this.tail = result.endNode;
-      }
-      this.length = result.count;
-    }
-    if (this.distinct) {
-      this.head.prev = this.tail;
-      this.tail.next = this.head;
-    } else if (this.distinct === 0) {
-      this.tail.next = this.head;
-    }
-    this.display(this.printNodeItem);
-    return this.length;
-  }
-
-  append(item) {
-    if (Object.is(item + 1, NaN) && !item) {
-      this.front !== this.rear;
-      throw handleError('Enter a value to prepend');
-    }
-
-    const lastNode = this.tail || this.getNode(this.length);
-    if (!(item instanceof Object)) {
-      const newNode = new Node(item, this.setNodePointers);
-
-      if (!lastNode) {
-        this.head = newNode;
-
-        if ('tail' in this) {
-          this.tail = newNode;
-        }
-      } else {
-        lastNode.next = newNode;
-        if ('tail' in this) {
-          this.tail = newNode;
-        }
-
-        if (this.distinct) {
-          newNode.prev = lastNode;
-        }
-      }
-      this.length = INCREMENT_ONE;
-    }
-    //check is item is an object
-    else if (Array.isArray(item) || item instanceof Object) {
-      const newNode = new Node(item[0], this.setNodePointers);
-      const result = generateNodes(item, newNode, this.setNodePointers, 1);
-      if (!lastNode) {
-        this.head = result.startNode;
-
-        if (this.tail === null) {
-          this.tail = result.endNode;
-        }
-      } else {
-        lastNode.next = result.startNode;
-        if (this.tail || 'tail' in this) {
-          this.tail = result.endNode;
-        }
-      }
-
-      this.length = result.count;
-    }
-    if (this.distinct || this.distinct === 0) {
-      if (this.distinct) {
-        this.head.prev = this.tail;
-      }
-      this.tail.next = this.head;
-    }
-    return this.length;
-  }
-
   shift() {
-    if (!this.head) {
-      throw new Error('List is empty.');
-    }
-    let tempNode = this.head || this.tail;
-    if (tempNode === this.head.next || !this.head.next) {
-      tempNode = this.head;
-      this.head = this.tail = null;
-    } else {
-      this.head = this.head.next;
-      if (this.tail) {
-        if (this.distinct) {
-          this.head.prev = this.tail;
-        }
+    if (!this.head) throw new Error('List is empty.');
 
-        if (this.distinct || this.distinct === 0) {
-          this.tail.next = this.head;
-        }
-      }
-      if (this.distinct) {
-        this.tail.next = this.head;
-      }
+    let tempNode = this.head || this.tail;
+    this.length = -1;
+
+    if (!tempNode.next) {
+      this.head = null;
+      if (this._TYPE === 'doublyLinked' || this.tail) this.tail = this.head;
+      return tempNode;
     }
-    this.length = -INCREMENT_ONE;
+    this.head = tempNode.next;
+
+    if (isFinite(this.distinct) && tempNode.next) {
+      this.distinct && (this.head.prev = this.tail);
+      this.tail && (this.tail.next = this.head);
+    }
     return tempNode;
   }
 
   pop() {
-    if (!this.head) {
-      throw new Error('List is empty.');
-    }
-    let tempNode, prevNode;
-    if (this.tail === this.head) {
-      tempNode = this.tail;
-      this.tail = this.head = null;
-    } else {
-      prevNode =
-        (this.tail ? this.tail.prev : null) || this.getNode(this.length - 1);
+    if (!this.head) throw new Error('List is empty.');
+    let tempNode,
+      prevNode = getNodeAt(this.head, 'next', this.length - 2);
+    tempNode = this.tail || prevNode.next;
 
-      if (prevNode === this.head && this.length === 1) {
-        tempNode = this.head;
-        this.head = null;
-      } else {
-        this.tail ? (this.tail = prevNode) : null;
-        tempNode = prevNode.next;
-      }
-      prevNode.next = this.distinct || this.distinct === 0 ? this.head : null;
+    if (this.head === tempNode) {
+      this.head = this.tail = null;
+    } else {
+      if (_has(this, 'tail')) this.tail = prevNode;
+      prevNode.next = isFinite(this.distinct) ? this.head : null;
       if (this.distinct && this._TYPE === 'doublyLinked') {
         this.head.prev = prevNode;
       }
@@ -200,40 +63,79 @@ export class Component {
     return tempNode;
   }
 
-  insertAtPos(pos, item) {
-    //position greater than list length
-    if (Object.is(item + 1, NaN) && !item) {
-      throw handleError('Enter a value to insert');
-    }
+  prepend(item) {
+    if (!isTruthy(item)) throw handleError('Enter a value to append');
+    let startNode = null;
+    let endNode = null;
+    let firstNode = this.head || this.tail;
 
-    if (pos > this.length + INCREMENT_ONE) {
-      throw handleError('invalid position.');
-    }
-    //perform append or prepend
-    if (
-      (pos === INCREMENT_ONE || pos === this.length + INCREMENT_ONE) &&
-      !this.head
-    ) {
-      return this[pos === INCREMENT_ONE ? 'prepend' : 'append'](item);
-    }
+    startNode = this.setUp(item);
+    ({
+      startNode: this.head = startNode,
+      count: this.length = 1,
+      endNode: endNode = startNode,
+    } = startNode);
 
-    const prevNode = this.getNode(pos - INCREMENT_ONE);
+    firstNode && (endNode.next = firstNode);
+    if (_has(this, 'tail') && !this.tail) this.tail = endNode || startNode;
+    if (this._TYPE === 'doublyLinked') firstNode && (firstNode.prev = endNode);
+
+    if (isFinite(this.distinct)) {
+      this.tail.next = this.head;
+      this.distinct && (this.head.prev = this.tail);
+    }
+    return this.length;
+  }
+
+  append(item) {
+    if (!isTruthy(item)) throw handleError('Enter a value to prepend');
+    let startNode = null;
+    let endNode = null;
+    const lastNode = this.tail || getNodeAt(this.head, 'next', this.length - 1);
+    startNode = this.setUp(item);
+    ({
+      endNode: endNode,
+      count: this.length = 1,
+      startNode: startNode = startNode,
+    } = startNode);
+
+    if (lastNode) lastNode.next = startNode;
+    !this.head && (this.head = startNode);
+
+    _has(this, 'tail') && (this.tail = endNode || startNode);
+    this._TYPE === 'doublyLinked' && (startNode.prev = lastNode);
+
+    if (isFinite(this.distinct)) {
+      let hasTail = _has(this, 'tail');
+      if (this.distinct) {
+        startNode.prev = lastNode;
+        hasTail && (this.head.prev = this.tail);
+      }
+      hasTail && (this.tail.next = this.head);
+    }
+    return this.length;
+  }
+
+  insert(startIndex, item) {
+    if (!isTruthy(item)) throw handleError('Enter a value to insert');
+    if ([1, this.length].includes(startIndex) || !this.head) {
+      return this[startIndex === 1 ? 'prepend' : 'append'](item);
+    }
+    const lastNode = getNodeAt(this.head, 'next', startIndex - 1);
     const nextNode = prevNode.next;
-    if (item instanceof Object) {
-      const chainedNode = generateNodes(item, prevNode, this.setNodePointers);
-      //perform linking of chain node
-      nextNode.prev = chainedNode.endNode;
-      this.length = chainedNode.count;
-    } else {
-      //item is single
-      prevNode.next = new Node(item, this.setNodePointers);
-      prevNode.next.next = nextNode;
+    let startNode = null;
+    let endNode = null;
+    startNode = this.setUp(item);
+    ({
+      endNode: endNode,
+      count: this.length = 1,
+      startNode: startNode = startNode,
+    } = startNode);
 
-      this.length = INCREMENT_ONE;
-    }
+    lastNode.next = startNode;
     if (this._TYPE === 'doublyLinked') {
-      prevNode.next.prev = prevNode;
-      nextNode.prev = prevNode.next;
+      startNode.prev = lastNode;
+      endNode.next = nextNode;
     }
 
     return this.length;
@@ -243,70 +145,40 @@ export class Component {
     let curNode, nextNode, prevNode;
     curNode = this.head;
     nextNode = prevNode = null;
-    if ('tail' in this) {
-      this.tail = curNode;
-    }
-    if ('prev' in curNode) {
-      prevNode = curNode.prev;
-    }
+    _has(this, 'tail') && (this.tail = curNode);
+    _has(curNode, 'prev') && (prevNode = curNode.prev);
+
     while (curNode) {
       nextNode = curNode.next;
       curNode.next = prevNode;
-      if ('prev' in curNode) {
-        curNode.prev = nextNode;
-      }
+      _has(curNode, 'prev') && (curNode.prev = nextNode);
       prevNode = curNode;
       curNode = nextNode;
-
       if (nextNode === this.head) break;
     }
     this.head = prevNode;
   }
 
-  display(callFn) {
-    const iterable = this.constructor.fetchNodes(
-      this.head || this.tail ? this.tail.next : null
-    );
-    const result = [];
-    let tempNode = iterable.next();
-    if (tempNode.done) return result;
-    do {
-      result.push(tempNode.value);
-      if (callFn && Function[Symbol.hasInstance(callFn)])
-        callFn(tempNode.value);
-      tempNode = iterable.next();
-    } while (!tempNode.done);
-    return result;
-  }
+  remove(start, end) {
+    if (!isTruthy(start) || start > this.length) return -1;
 
-  static *fetchNodes(head) {
-    if (!(head || this[Symbol.hasInstance](head))) return;
-    let temp = head;
-    do {
-      yield temp.data;
-      temp = temp.next;
-      if (temp === head) break;
-    } while (temp);
-  }
-
-  removeFromPos(pos) {
-    if (pos === undefined || pos > this.length) {
-      return -1;
-    }
-
-    if (pos === 1 || pos === this.length) {
-      return this[pos === 1 ? 'shift' : 'pop']();
+    if ([1, this.length].includes(start)) {
+      return this[start === 1 ? 'shift' : 'pop']();
     } else {
-      const prevNode = this.getNode(pos - 1);
-      const removeNode = prevNode.next;
-      const nextNode = removeNode.next;
-
+      const prevNode = getNodeAt(this.head, 'next', start);
+      let removeNodes = prevNode.next;
+      if (isFinite(end) && end < this.length) {
+        end = !Math.max(end, 0) ? this.length - end : end;
+        if (end < start) return;
+        removeNodes = getNodeAt(prevNode, 'next', end - start);
+      }
+      const nextNode = removeNodes.next;
       prevNode.next = nextNode;
       if (this.tail && this._TYPE === 'doublyLinked') {
         nextNode.prev = prevNode;
       }
-      this.length = -INCREMENT_ONE;
-      return removeNode;
+      this.length = end - start || start;
+      return removeNodes;
     }
   }
 

@@ -1,41 +1,33 @@
 'use strict';
-import { Component } from './component.js';
-import { generateNodes } from './handleNode.js';
+import LinkedList from './component.js';
 import Node from '../node/node.js';
+import { partialRight, partial } from '../../util/utility.js';
+import { createNode, genChainedNodes } from '../../util/helper.js';
+import { isTruthy } from '../../util/utility.js';
 
-const INCREMENT_ONE = 1;
-
-const setDoublyNodePointers = (_this) => {
+const configD = (_this) => {
   _this.next = null;
   _this.prev = null;
 };
 
-class DoublyLinkedList extends Component {
-  constructor(value) {
-    super(true, setDoublyNodePointers);
-    this.constructor.prototype._TYPE = 'doublyLinked';
-    value ? this.create(value) : null;
-  }
+const NodeConstruct = partialRight(Node.of, configD);
+const createChainedNode = partial(
+  genChainedNodes().configure({
+    Node: NodeConstruct,
+    isDouble: true,
+    count: 0,
+  }).start
+);
 
-  create(value) {
-    if (!value instanceof Array) {
-      newNode = new Node(value, this.setNodePointers);
-      this.head = newNode;
-      this.length = INCREMENT_ONE;
-    } else {
-      this.head = new Node(value[0], this.setNodePointers);
-      const chainedNodeResult = generateNodes(
-        value,
-        this.head,
-        this.setNodePointers,
-        1
-      );
+const setUpNode = partialRight(createNode, NodeConstruct, createChainedNode);
 
-      this.length = chainedNodeResult.count;
-      this.tail = chainedNodeResult.endNode;
-    }
-
-    return this.head;
+class DoublyLinkedList extends LinkedList {
+  constructor(item) {
+    super(true);
+    this._TYPE = 'doublyLinked';
+    this.setUp = setUpNode;
+    isTruthy(item) && this.append(item);
+    return this;
   }
 }
 
