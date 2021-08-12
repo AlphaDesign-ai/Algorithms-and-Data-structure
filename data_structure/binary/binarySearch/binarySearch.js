@@ -13,12 +13,11 @@ export default class BinarySearch extends Binary {
     if (!this._root) {
       return (this._root = new BinaryTree(val));
     }
-    return super.constructor.insertNode(this._root, val), this._root;
+    return BinarySearch.insertNode(this._root, val), this._root;
   }
 
   toArray(type = 0) {
     if (typeof type !== 'number') throw new TypeError('Excepted an integer');
-    const superConstr = super.constructor;
-    return superConstr.binaryNodeParker(this)(superConstr.types[type % 4]);
+    return BinarySearch.binaryNodeParker(this)(BinarySearch.types[type % 4]);
   }
 }
