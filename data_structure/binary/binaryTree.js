@@ -35,7 +35,7 @@ export default class Binary {
 
   static binaryNodeParker(binaryTree) {
     const nodeParker = (type) => {
-      if (!this.types.includes(type)) {
+      if (!type in Binary.types) {
         type = 'preOrderTraversal';
         console.warn(
           'Invalid traversal type - supported type ' +
