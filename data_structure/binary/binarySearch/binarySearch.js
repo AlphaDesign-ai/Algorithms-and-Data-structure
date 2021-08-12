@@ -18,6 +18,6 @@ export default class BinarySearch extends Binary {
 
   toArray(type = 0) {
     if (typeof type !== 'number') throw new TypeError('Excepted an integer');
-    return BinarySearch.binaryNodeParker(this)(type % 4);
+    return BinarySearch.binaryNodeParker(this)(type % BinarySearch.types.length);
   }
 }
