@@ -5,8 +5,6 @@ export default class LinkedList {
   constructor(needTail) {
     this.head = null;
     needTail && (this.tail = null);
-
-    //define the virtual property
     !function counterIIFE() {
       let count = 0;
       Object.defineProperty(this, 'length', {
@@ -24,6 +22,7 @@ export default class LinkedList {
     }.call(this);
   }
 
+  //remove item from the head
   shift() {
     if (!this.head) throw new Error('List is empty.');
 
@@ -44,6 +43,7 @@ export default class LinkedList {
     return tempNode;
   }
 
+  //remove the tail item
   pop() {
     if (!this.head) throw new Error('List is empty.');
     let tempNode,

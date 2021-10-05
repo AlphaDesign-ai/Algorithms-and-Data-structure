@@ -1,4 +1,4 @@
-class Dequeue {
+export class Dequeue {
   constructor(size) {
     if (!size) {
       throw new Error('Initialising a stack without size');

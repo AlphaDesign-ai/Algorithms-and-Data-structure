@@ -1,4 +1,3 @@
-'use strict';
 import SinglyLinkedList from './linkedList.js';
 
 export default class CircularSinglyLinkedList extends SinglyLinkedList {

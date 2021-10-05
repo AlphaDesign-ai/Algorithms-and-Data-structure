@@ -1,4 +1,4 @@
-function ThreadedBinaryTree(data) {
+export function ThreadedBinaryTree(data) {
   this.left = null;
   this.lTag = 0;
   this.value = data;

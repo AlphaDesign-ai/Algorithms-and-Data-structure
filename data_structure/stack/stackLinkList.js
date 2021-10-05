@@ -1,6 +1,7 @@
 'use strict';
 import Ls from '../linkedList/linkedList';
 
+//stack implementation using linkedList
 class StackLinkedList {
   constructor(size) {
     this.top = -1;

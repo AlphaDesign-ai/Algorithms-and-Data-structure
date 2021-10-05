@@ -3,8 +3,6 @@ import Ls from '../linkedList/linkedList.js.js';
 import CircularLS from '../linkedList/circularSinglyLinkedList.js';
 import { StackArray as Stack } from '../stack/index.js';
 
-const log = console.log;
-
 export default class QueueArray {
   constructor(size) {
     if (!size) {

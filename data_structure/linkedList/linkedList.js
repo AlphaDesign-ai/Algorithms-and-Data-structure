@@ -19,6 +19,7 @@ const createChainedNode = partial(
 
 const setUpNode = partialRight(createNode, NodeConstruct, createChainedNode);
 
+//inheritance behaviour
 class SinglyLinkedList extends LinkedList {
   constructor(item, needTail) {
     super(needTail);

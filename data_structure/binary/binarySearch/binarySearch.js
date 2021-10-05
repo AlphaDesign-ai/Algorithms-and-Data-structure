@@ -4,6 +4,7 @@ export default class BinarySearch extends Binary {
   constructor(val) {
     super();
     this._root = null;
+    //insert item if provided
     if (val) {
       this.insert(val);
     }
@@ -18,6 +19,8 @@ export default class BinarySearch extends Binary {
 
   toArray(type = 0) {
     if (typeof type !== 'number') throw new TypeError('Excepted an integer');
-    return BinarySearch.binaryNodeParker(this)(type % BinarySearch.types.length);
+    return BinarySearch.binaryNodeParker(this)(
+      type % BinarySearch.types.length
+    );
   }
 }

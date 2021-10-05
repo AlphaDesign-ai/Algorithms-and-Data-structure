@@ -11,6 +11,7 @@ export function BinaryTree(val) {
   this.right = null;
 }
 
+//binary tree
 export default class Binary {
   static types = [
     'preOrderTraversal',

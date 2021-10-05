@@ -9,7 +9,6 @@ class CircularDoublyLinkedList extends DoublyLinkedList {
     }
     this.distinct = 1;
   }
-
   connectEnds() {
     this.tail.next = this.head;
     this.head.prev = this.tail;
