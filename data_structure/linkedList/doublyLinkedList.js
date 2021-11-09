@@ -10,6 +10,8 @@ const configD = (_this) => {
   _this.prev = null;
 };
 
+//DoublyLinkedList
+
 const NodeConstruct = partialRight(Node.of, configD);
 const createChainedNode = partial(
   genChainedNodes().configure({

@@ -12,6 +12,7 @@ export const isTruthy = (val) =>
   Number.isFinite(val) ||
   false;
 
+//Utility
 export function getElIdxWithVal(list) {
   return function getIndex(val, start, end) {
     for (; start < end; start++) {

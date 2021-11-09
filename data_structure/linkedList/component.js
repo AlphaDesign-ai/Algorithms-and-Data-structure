@@ -22,7 +22,7 @@ export default class LinkedList {
     }.call(this);
   }
 
-  //remove item from the head
+  //Remove item from the head
   shift() {
     if (!this.head) throw new Error('List is empty.');
 

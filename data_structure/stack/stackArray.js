@@ -1,6 +1,6 @@
 'use strict';
 
-//stack implementation using stack
+//Stack implementation using stack
 export class StackArray {
   constructor(size) {
     this.top = -1;

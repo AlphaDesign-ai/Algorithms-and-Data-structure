@@ -1,7 +1,7 @@
 'use strict';
 import { StackArray as StackLs } from '../../data_structure/stack/index';
 
-//conversion infix to postfix expression
+//Conversion infix to postfix expression
 const operatorTable = {
   '+': { $prec: 1, $ass: { $ltr: true, $rtl: false } },
   '-': { $prec: 1, $ass: { $ltr: true, $rtl: false } },
@@ -63,7 +63,6 @@ export function convertExp(expression, type) {
     );
   }
 
-  // debugger;
   const postFix = [];
   Object.defineProperty(postFix, 'this', {
     value: function (limiter) {

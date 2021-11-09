@@ -1,3 +1,4 @@
+//Merge Sort
 function mergeSort(
   unsortedListA,
   unsortedListB,
@@ -11,7 +12,10 @@ function mergeSort(
     MergedSortArray = [];
 
   //initializing the variable an initial value;
-  currentIndexOfUnsortedListA = currentIndexOfUnsortedListB = CurrentIndexOfTheMergedSortArray = 0;
+  currentIndexOfUnsortedListA =
+    currentIndexOfUnsortedListB =
+    CurrentIndexOfTheMergedSortArray =
+      0;
 
   //checking to see if any of the list have been fully check and compared
 

@@ -8,6 +8,8 @@ const configS = (_this) => {
   _this.next = null;
 };
 
+//LinkedList
+
 const NodeConstruct = partialRight(Node.of, configS);
 const createChainedNode = partial(
   genChainedNodes().configure({
@@ -19,7 +21,7 @@ const createChainedNode = partial(
 
 const setUpNode = partialRight(createNode, NodeConstruct, createChainedNode);
 
-//inheritance behaviour
+//Inheritance behaviour
 class SinglyLinkedList extends LinkedList {
   constructor(item, needTail) {
     super(needTail);

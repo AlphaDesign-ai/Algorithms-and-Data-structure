@@ -1,3 +1,5 @@
+//dequeue algorithm
+
 export class Dequeue {
   constructor(size) {
     if (!size) {

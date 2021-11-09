@@ -1,9 +1,10 @@
 import * as util from '../utility.js';
 import * as helper from '../helper.js';
-
+// Importing
 import { BinaryTree } from '../../data_structure/binary/binaryTree.js';
 import BinarySearch from '../../data_structure/binary/binarySearch/binarySearch.js';
 
+//Binary Helper
 export const packNodeIntoList = function (fn, type) {
   const packer = helper.gatherToList(util.isObject(type) ? type : { type });
   if (typeof fn === 'function') packer.mapMethod(fn);

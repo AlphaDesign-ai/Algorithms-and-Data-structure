@@ -9,7 +9,7 @@ export default (function () {
     this.nextSibling = null;
   }
 
-  //Traverse through the tree levels using the `firstChild`
+  //Traverse through the tree levels using the `FirstChild`
   const traverseLevel = (tree, config, level = config.shift()) => {
     if (!level) return traverseChild(tree, config.length ? [...config] : null);
     return traverseLevel(tree.firstChild, config, level - 1);

@@ -1,6 +1,7 @@
 'use strict';
 import Ls from '../linkedList/linkedList.js';
 
+//Stack Array
 class StackArray {
   constructor(size) {
     this.top = -1;

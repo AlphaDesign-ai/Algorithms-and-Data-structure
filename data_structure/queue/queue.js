@@ -123,7 +123,7 @@ class QueueLs {
     }
   }
 }
-
+//Queue algorithm
 class CircularQueue {
   constructor(size) {
     this.front = this.rear = -1;

@@ -1,5 +1,6 @@
 'use strict';
 
+//Heap Sorting
 class HeapSort {
   constructor(heapList, heapTreeType) {
     this.heapList = heapList;

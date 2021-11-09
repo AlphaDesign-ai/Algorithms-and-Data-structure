@@ -1,4 +1,5 @@
 'use strict';
+//quick sort
 function partition(
   unsortedList,
   lowerBound = 0,
